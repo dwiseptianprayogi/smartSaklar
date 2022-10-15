@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.coordinatorlayout.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
+    >
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -56,21 +57,96 @@
 
         </ScrollView>
 
-        <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
-            android:id="@+id/tambah_barang"
-            android:layout_alignParentBottom="true"
-            android:layout_alignParentEnd="true"
-            android:layout_margin="15dp"
+        <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:theme="@style/MaterialTheme"
-            app:backgroundTint="@color/colorAccent"
-            app:icon="@drawable/ic_add"
-            app:iconTint="@android:color/white" />
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentBottom="true"
+            android:layout_margin="5dp"
+            android:orientation="vertical"
+            >
+            <com.google.android.material.floatingactionbutton.FloatingActionButton
+                android:id="@+id/idFABHome"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp"
+                android:background="@color/purple_200"
+                android:contentDescription="@string/app_name"
+                android:src="@drawable/ic_baseline_create_new_folder_24"
+                android:visibility="gone"
+                app:backgroundTint="@color/purple_200"
+                app:tint="@color/white" />
+
+            <!--on below line we are creating a home fab
+                 and setting its visibility to gone-->
+            <com.google.android.material.floatingactionbutton.FloatingActionButton
+                android:id="@+id/idFABSettings"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp"
+                android:background="@color/purple_200"
+                android:contentDescription="@string/app_name"
+                android:src="@drawable/ic_baseline_wifi_24"
+                android:visibility="gone"
+                app:backgroundTint="@color/purple_200"
+                app:tint="@color/white" />
+
+            <com.google.android.material.floatingactionbutton.FloatingActionButton
+                android:id="@+id/tambah_barang"
+                android:layout_margin="0dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:theme="@style/MaterialTheme"
+                android:padding="4dp"
+                app:backgroundTint="@color/colorAccent"
+                app:icon="@drawable/ic_add"
+                app:iconTint="@android:color/white" />
+        </LinearLayout>
+
+
+
+        <FrameLayout
+            android:id="@+id/sheetSchedule"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@drawable/rounded"
+            android:padding="10dp"
+            android:layout_below="@+id/topbar"
+            android:layout_gravity="center_vertical"
+            xmlns:tools="http://schemas.android.com/tools"
+            >
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+                <ImageView
+                    android:id="@+id/imgShceduleCancelShow"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:layout_alignParentStart="true"
+                    android:src="@drawable/ic_baseline_cancel_24" />
+
+                <TextView
+                    android:id="@+id/titleScheduleShow"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerHorizontal="true"
+                    android:text="SCHEDULE"
+                    android:textColor="@color/black"
+                    android:textStyle="bold" />
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/rvSchedule"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:layout_below="@+id/titleScheduleShow"
+                    tools:listitem="@layout/item_schedule" />
+            </RelativeLayout>
+        </FrameLayout>
 
     </RelativeLayout>
-
-
 
     <FrameLayout
         android:id="@+id/sheet"
@@ -179,44 +255,6 @@
         </RelativeLayout>
     </FrameLayout>
 
-    <FrameLayout
-        android:id="@+id/sheetSchedule"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@drawable/rounded"
-        android:padding="10dp"
-        android:layout_gravity="center_vertical"
-        xmlns:tools="http://schemas.android.com/tools"
-        tools:layout="@layout/bottomsheet_fragment"
-        >
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical">
-            <ImageView
-                android:id="@+id/imgShceduleCancelShow"
-                android:layout_width="30dp"
-                android:layout_height="30dp"
-                android:layout_alignParentStart="true"
-                android:src="@drawable/ic_baseline_cancel_24" />
 
-            <TextView
-                android:id="@+id/titleScheduleShow"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerHorizontal="true"
-                android:text="SCHEDULE"
-                android:textColor="@color/black"
-                android:textStyle="bold" />
-
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/rvSchedule"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:layout_below="@+id/titleScheduleShow"
-                tools:listitem="@layout/item_schedule" />
-        </RelativeLayout>
-    </FrameLayout>
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

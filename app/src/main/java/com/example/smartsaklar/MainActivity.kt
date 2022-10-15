@@ -17,6 +17,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.smartsaklar.schedule.MainAdapterSchedule
 import com.example.smartsaklar.schedule.ModelBarangSchedule
 import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.navigation.NavigationView
 import com.google.firebase.FirebaseApp
 import com.google.firebase.database.*
@@ -24,8 +25,11 @@ import java.util.*
 
 
 class MainActivity : AppCompatActivity(), MainAdapter.FirebaseDataListener, MainAdapterSchedule.FirebaseDataListener {
-    private var mFloatingActionButton: ExtendedFloatingActionButton? = null
+
     private var mEditNama: EditText? = null
+    private var namaWifi:EditText? = null
+    private var passWifi:EditText? = null
+
     private var mRecyclerView: RecyclerView? = null
     private var mAdapter: MainAdapter? = null
     private var daftarBarang: ArrayList<ModelBarang?>? = null
@@ -34,6 +38,7 @@ class MainActivity : AppCompatActivity(), MainAdapter.FirebaseDataListener, Main
 
     private var timeLamp : String? = null
     private var dateLamp : String? = null
+    private var dateLampId : String? = null
     private var hour : String? = null
     private var minute : String? = null
 
@@ -46,6 +51,11 @@ class MainActivity : AppCompatActivity(), MainAdapter.FirebaseDataListener, Main
     private var daftarSchedule: ArrayList<ModelBarangSchedule?>? = null
     private var mDatabaseReferenceSchedule: DatabaseReference? = null
     private var mFirebaseInstanceSchedule: FirebaseDatabase? = null
+
+    lateinit var addData: FloatingActionButton
+    lateinit var addWifi: FloatingActionButton
+    var fabVisible = false
+    lateinit var mFloatingActionButton: FloatingActionButton
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -81,8 +91,41 @@ class MainActivity : AppCompatActivity(), MainAdapter.FirebaseDataListener, Main
                     ).show()
                 }
             })
+        fabVisible = false
+        addData = findViewById(R.id.idFABHome)
+        addWifi = findViewById(R.id.idFABSettings)
         mFloatingActionButton = findViewById(R.id.tambah_barang)
-        mFloatingActionButton!!.setOnClickListener(View.OnClickListener { dialogTambahBarang() })
+        mFloatingActionButton.setImageDrawable(resources.getDrawable(R.drawable.ic_add))
+
+        mFloatingActionButton!!.setOnClickListener(View.OnClickListener {
+//            dialogTambahBarang()
+            if (!fabVisible) {
+                addData.show()
+                addWifi.show()
+
+                addWifi.visibility = View.VISIBLE
+                addData.visibility = View.VISIBLE
+                fabVisible = true
+
+                mFloatingActionButton.setImageDrawable(resources.getDrawable(R.drawable.ic_baseline_cancel_24))
+            } else {
+                addData.hide()
+                addWifi.hide()
+
+                addWifi.visibility = View.GONE
+                addData.visibility = View.GONE
+                fabVisible = false
+
+                mFloatingActionButton.setImageDrawable(resources.getDrawable(R.drawable.ic_add))
+            }
+        })
+
+        addData.setOnClickListener{
+            dialogTambahBarang()
+        }
+        addWifi.setOnClickListener{
+            dialogTambahWifi()
+        }
 
 //        val bottomSheetFragment = BottomSheetFragment()
 //        BottomSheetBehavior.from(findViewById(R.id.sheet)).apply {
@@ -175,6 +218,9 @@ class MainActivity : AppCompatActivity(), MainAdapter.FirebaseDataListener, Main
                         Toast.LENGTH_LONG
                     ).show()
                 }
+            val notificationHelper = NotificationHelper(this@MainActivity)
+            notificationHelper.sendHighPriorityNotification("Lampu 1 Mati Mohon Ganti!",
+                "", MainActivity::class.java)
         }
         if (btn1=="on"){
             barang.lampu1 = "off"
@@ -241,24 +287,31 @@ class MainActivity : AppCompatActivity(), MainAdapter.FirebaseDataListener, Main
         year = today.get(Calendar.YEAR).toString()
         month = today.get(Calendar.MONTH).toString()
         day =  today.get(Calendar.DAY_OF_MONTH).toString()
-        dateLamp = day+"/"+month+"/"+year
+        dateLamp = day+"/"+(month!!.toInt()+1)+"/"+year
+        dateLampId = day+(month!!.toInt()+1)+year
         datePicker.init(today.get(Calendar.YEAR), today.get(Calendar.MONTH),
             today.get(Calendar.DAY_OF_MONTH)
         ) { view, year, month, day ->
             val month = month + 1
             val msg = "You Selected: $day/$month/$year"
             dateLamp = day.toString()+"/"+month+"/"+year
-            Toast.makeText(this@MainActivity, msg, Toast.LENGTH_SHORT).show()
+//            Toast.makeText(this@MainActivity, msg, Toast.LENGTH_SHORT).show()
         }
         val simpleTimePicker = findViewById<View>(R.id.timePicker) as TimePicker
         simpleTimePicker.setIs24HourView(true) // used to display AM/PM mode
         hour = simpleTimePicker.hour.toString()
         minute = simpleTimePicker.minute.toString()
         simpleTimePicker.setOnTimeChangedListener(OnTimeChangedListener { view, hourOfDay, minute ->
-            Toast.makeText(applicationContext, "$hourOfDay  $minute", Toast.LENGTH_SHORT).show()
+//            Toast.makeText(applicationContext, "$hourOfDay  $minute", Toast.LENGTH_SHORT).show()
             timeLamp = hourOfDay.toString()+":"+minute
         })
         timeLamp = hour +":"+ minute
+
+//        if (hour!!.toInt() <10 || minute!!.toInt() <10){
+//            timeLamp = "0"+hour +":"+ "0"+minute
+//        } else{
+//
+//        }
 
         tvSaveSchedule.setOnClickListener {
             dialogSchedule(barang)
@@ -322,12 +375,14 @@ class MainActivity : AppCompatActivity(), MainAdapter.FirebaseDataListener, Main
         Toast.makeText(applicationContext,timeLamp.toString(), Toast.LENGTH_SHORT).show()
         val btnState = findViewById<ToggleButton>(R.id.btnScheduleState)
         val stateLamp = btnState.text
-        val waktuSchedule = stateLamp.toString()
-        val stateSchedule = dateLamp+" "+timeLamp
+        val stateSchedule = stateLamp.toString()
+        val waktuSchedule  = dateLamp+" "+timeLamp
+        val waktuScheduleId = dateLampId+" "+timeLamp
 
-        submitDataSchedule(ModelBarang(waktuSchedule, stateSchedule))
-        mDatabaseReference!!.child("data_ruangan").child(barang!!.key!!).child("schedule").push()
-            .setValue(ModelBarang(waktuSchedule, stateSchedule)).addOnSuccessListener (
+//        submitDataSchedule(ModelBarang(stateSchedule, waktuSchedule))
+        mDatabaseReference!!.child("data_ruangan").child(barang!!.key!!).child("schedule")
+            .child(waktuScheduleId)
+            .setValue(ModelBarang(stateSchedule,waktuSchedule )).addOnSuccessListener (
                 this
             ){
                 val schedule = findViewById<FrameLayout>(R.id.sheet)
@@ -388,6 +443,35 @@ class MainActivity : AppCompatActivity(), MainAdapter.FirebaseDataListener, Main
 //            val lampuRuangan3 = "off"
             if (!namaBarang.isEmpty()) {
                 submitDataBarang(ModelBarang(namaBarang, lampuRuangan , lampuRuangan2))
+            } else {
+                Toast.makeText(this@MainActivity, "Data harus di isi!", Toast.LENGTH_LONG).show()
+            }
+        }
+        builder.setNegativeButton(
+            "BATAL"
+        ) { dialog, id -> dialog.dismiss() }
+        val dialog: Dialog = builder.create()
+        dialog.show()
+    }
+    private fun dialogTambahWifi() {
+        val builder = AlertDialog.Builder(this)
+        builder.setTitle("Update Wifi")
+        val view = layoutInflater.inflate(R.layout.layout_add_wifi, null)
+
+        namaWifi = view.findViewById(R.id.nama_wifi)
+        passWifi = view.findViewById(R.id.pass_wifi)
+
+
+        builder.setView(view)
+        builder.setPositiveButton(
+            "SIMPAN"
+        ) { dialog, id ->
+            val ssid = namaWifi!!.getText().toString()
+            val pass = passWifi!!.text.toString()
+            if (!ssid.isEmpty()&&!pass.isEmpty()) {
+                mDatabaseReference!!.child("wifi").child("ssid").setValue(ssid)
+                mDatabaseReference!!.child("wifi").child("pass").setValue(pass)
+                mDatabaseReference!!.child("wifi").child("stateWifi").setValue("1")
             } else {
                 Toast.makeText(this@MainActivity, "Data harus di isi!", Toast.LENGTH_LONG).show()
             }

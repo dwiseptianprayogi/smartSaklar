@@ -17,9 +17,9 @@ class ModelBarang {
         key = Key
     }
 
-    constructor(waktuSchedule:String?, stateSchedule:String) {
-        Time = waktuSchedule
+    constructor(stateSchedule:String?, waktuSchedule:String) {
         State = stateSchedule
+        Time = waktuSchedule
     }
 
     constructor(namaBarang: String?,lampuRuangan: String?, lampuRuangan2: String? ) {
