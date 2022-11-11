@@ -385,125 +385,125 @@ class MainActivity : AppCompatActivity(), MainAdapter.FirebaseDataListener, Main
 
     override fun onItemClickSceduleEdit(barang: ModelBarangSchedule?, position: Int) {
         Toast.makeText(this, idRuanganSchedule, Toast.LENGTH_SHORT).show()
-        val btnState = findViewById<ToggleButton>(R.id.btnScheduleState)
-
-        mDatabaseReference!!.child("new/ruangan").child(idRuanganSchedule!!).child("schedule")
-            .child(barang!!.key!!).child("day").get().addOnSuccessListener {
-                dayEdit = it.value as String?
-                day =  dayEdit
-            }
-        mDatabaseReference!!.child("new/ruangan").child(idRuanganSchedule!!).child("schedule")
-            .child(barang!!.key!!).child("month").get().addOnSuccessListener {
-                monthEdit = it.value as String?
-                month = monthEdit
-            }
-        mDatabaseReference!!.child("new/ruangan").child(idRuanganSchedule!!).child("schedule")
-            .child(barang!!.key!!).child("year").get().addOnSuccessListener {
-                yearEdit = it.value as String?
-                year = yearEdit
-            }
-        mDatabaseReference!!.child("new/ruangan").child(idRuanganSchedule!!).child("schedule")
-            .child(barang!!.key!!).child("hour").get().addOnSuccessListener {
-                hourEdit = it.value as String?
-                hour = hourEdit
-            }
-        mDatabaseReference!!.child("new/ruangan").child(idRuanganSchedule!!).child("schedule")
-            .child(barang!!.key!!).child("minute").get().addOnSuccessListener {
-                minuteEdit = it.value as String?
-                minute = minuteEdit
-            }
-
-        mDatabaseReference!!.child("new/ruangan").child(idRuanganSchedule!!).child("schedule")
-            .child(barang!!.key!!).child("state").get().addOnSuccessListener {
-                stateLamp2= it.value as String?
-                btnState.setText(stateLamp2)
-            }
-        mDatabaseReference!!.child("new/ruangan").child(idRuanganSchedule!!).child("schedule")
-            .child(barang!!.key!!).get().addOnSuccessListener {
-//                log(it.value as String?)
-                Log.e("firebase", "data schedule : ${it.value}" )
-                val jsonArray = JSONTokener(it.value.toString()).nextValue() as JSONArray
-                for (i in 0 until jsonArray.length()) {
-                    // ID
-                    val hour = jsonArray.getJSONObject(i).getString("hour")
-                    Log.i("hour: ", hour)
-
-                    val month = jsonArray.getJSONObject(i).getString("month")
-                    Log.i("month: ", month)
-
-                    val year = jsonArray.getJSONObject(i).getString("year")
-                    Log.i("year: ", year)
-
-                    val state = jsonArray.getJSONObject(i).getString("state")
-                    Log.i("state: ", state)
-
-                    // Employee Name
-                    val time = jsonArray.getJSONObject(i).getString("time")
-                    Log.i("time: ", time)
-
-                    // Employee Salary
-                    val day = jsonArray.getJSONObject(i).getString("day")
-                    Log.i("day: ", day)
-
-                    val minute = jsonArray.getJSONObject(i).getString("minute")
-                    Log.i("minute: ", minute)
-
-                }
-            }
-
-        val schedule = findViewById<FrameLayout>(R.id.sheet)
-        schedule.visibility = View.VISIBLE
-        val imgCancelSchedule = findViewById<ImageView>(R.id.imgShceduleCancel)
-        imgCancelSchedule.setOnClickListener {
-            schedule.visibility = View.GONE
-        }
-        val tvSaveSchedule = findViewById<TextView>(R.id.tvSchedulSave)
-        val datePicker = findViewById<DatePicker>(R.id.date_Picker)
-//        Toast.makeText(this, dayEdit, Toast.LENGTH_SHORT).show()
-//        val today = date
-//        val today = Calendar.getInstance()
-
-//        Toast.makeText(applicationContext, today.toString(), Toast.LENGTH_LONG).show()
-
-        val stateLamp = btnState.text
-
-        dateLamp = day+"/"+month+"/"+year
-        dateLampId = day+month+year
-//        datePicker.init(
-//            year!!.toInt(),
-//            month!!.toInt(),
-//            day!!.toInt()
-//        ) { view, year, month, day ->
-//            val msg = "You Selected: $day/$month/$year"
-//            dateLamp = day.toString()+"/"+month+"/"+year
-////            Toast.makeText(this@MainActivity, msg, Toast.LENGTH_SHORT).show()
+//        val btnState = findViewById<ToggleButton>(R.id.btnScheduleState)
+//
+//        mDatabaseReference!!.child("new/ruangan").child(idRuanganSchedule!!).child("schedule")
+//            .child(barang!!.key!!).child("day").get().addOnSuccessListener {
+//                dayEdit = it.value as String?
+//                day =  dayEdit
+//            }
+//        mDatabaseReference!!.child("new/ruangan").child(idRuanganSchedule!!).child("schedule")
+//            .child(barang!!.key!!).child("month").get().addOnSuccessListener {
+//                monthEdit = it.value as String?
+//                month = monthEdit
+//            }
+//        mDatabaseReference!!.child("new/ruangan").child(idRuanganSchedule!!).child("schedule")
+//            .child(barang!!.key!!).child("year").get().addOnSuccessListener {
+//                yearEdit = it.value as String?
+//                year = yearEdit
+//            }
+//        mDatabaseReference!!.child("new/ruangan").child(idRuanganSchedule!!).child("schedule")
+//            .child(barang!!.key!!).child("hour").get().addOnSuccessListener {
+//                hourEdit = it.value as String?
+//                hour = hourEdit
+//            }
+//        mDatabaseReference!!.child("new/ruangan").child(idRuanganSchedule!!).child("schedule")
+//            .child(barang!!.key!!).child("minute").get().addOnSuccessListener {
+//                minuteEdit = it.value as String?
+//                minute = minuteEdit
+//            }
+//
+//        mDatabaseReference!!.child("new/ruangan").child(idRuanganSchedule!!).child("schedule")
+//            .child(barang!!.key!!).child("state").get().addOnSuccessListener {
+//                stateLamp2= it.value as String?
+//                btnState.setText(stateLamp2)
+//            }
+//        mDatabaseReference!!.child("new/ruangan").child(idRuanganSchedule!!).child("schedule")
+//            .child(barang!!.key!!).get().addOnSuccessListener {
+////                log(it.value as String?)
+//                Log.e("firebase", "data schedule : ${it.value}" )
+//                val jsonArray = JSONTokener(it.value.toString()).nextValue() as JSONArray
+//                for (i in 0 until jsonArray.length()) {
+//                    // ID
+//                    val hour = jsonArray.getJSONObject(i).getString("hour")
+//                    Log.i("hour: ", hour)
+//
+//                    val month = jsonArray.getJSONObject(i).getString("month")
+//                    Log.i("month: ", month)
+//
+//                    val year = jsonArray.getJSONObject(i).getString("year")
+//                    Log.i("year: ", year)
+//
+//                    val state = jsonArray.getJSONObject(i).getString("state")
+//                    Log.i("state: ", state)
+//
+//                    // Employee Name
+//                    val time = jsonArray.getJSONObject(i).getString("time")
+//                    Log.i("time: ", time)
+//
+//                    // Employee Salary
+//                    val day = jsonArray.getJSONObject(i).getString("day")
+//                    Log.i("day: ", day)
+//
+//                    val minute = jsonArray.getJSONObject(i).getString("minute")
+//                    Log.i("minute: ", minute)
+//
+//                }
+//            }
+//
+//        val schedule = findViewById<FrameLayout>(R.id.sheet)
+//        schedule.visibility = View.VISIBLE
+//        val imgCancelSchedule = findViewById<ImageView>(R.id.imgShceduleCancel)
+//        imgCancelSchedule.setOnClickListener {
+//            schedule.visibility = View.GONE
 //        }
-
-        val simpleTimePicker = findViewById<View>(R.id.timePicker) as TimePicker
-        simpleTimePicker.setIs24HourView(true) // used to display AM/PM mode
-
-        simpleTimePicker.setOnTimeChangedListener(OnTimeChangedListener { view, hour, minute     ->
-//            Toast.makeText(applicationContext, "$hourOfDay  $minute", Toast.LENGTH_SHORT).show()
-            timeLamp = hour.toString() +":"+ minute
-        })
-        timeLamp = hour
-
-        tvSaveSchedule.setOnClickListener {
-            mDatabaseReference!!.child("new/ruangan").child(idRuanganSchedule!!)
-                .child("schedule").child(barang!!.key!!).child("state").setValue(stateLamp)
-            mDatabaseReference!!.child("new/ruangan").child(idRuanganSchedule!!)
-                .child("schedule").child(barang!!.key!!).child("day").setValue(day)
-            mDatabaseReference!!.child("new/ruangan").child(idRuanganSchedule!!)
-                .child("schedule").child(barang!!.key!!).child("month").setValue(month)
-            mDatabaseReference!!.child("new/ruangan").child(idRuanganSchedule!!)
-                .child("schedule").child(barang!!.key!!).child("year").setValue(year)
-            mDatabaseReference!!.child("new/ruangan").child(idRuanganSchedule!!)
-                .child("schedule").child(barang!!.key!!).child("hour").setValue(hour)
-            mDatabaseReference!!.child("new/ruangan").child(idRuanganSchedule!!)
-                .child("schedule").child(barang!!.key!!).child("minute").setValue(minute)
-            mDatabaseReference!!.child("new/ruangan").child(idRuanganSchedule!!)
-                .child("schedule").child(barang!!.key!!).child("time").setValue(timeLamp)
-        }
+//        val tvSaveSchedule = findViewById<TextView>(R.id.tvSchedulSave)
+//        val datePicker = findViewById<DatePicker>(R.id.date_Picker)
+////        Toast.makeText(this, dayEdit, Toast.LENGTH_SHORT).show()
+////        val today = date
+////        val today = Calendar.getInstance()
+//
+////        Toast.makeText(applicationContext, today.toString(), Toast.LENGTH_LONG).show()
+//
+//        val stateLamp = btnState.text
+//
+//        dateLamp = day+"/"+month+"/"+year
+//        dateLampId = day+month+year
+////        datePicker.init(
+////            year!!.toInt(),
+////            month!!.toInt(),
+////            day!!.toInt()
+////        ) { view, year, month, day ->
+////            val msg = "You Selected: $day/$month/$year"
+////            dateLamp = day.toString()+"/"+month+"/"+year
+//////            Toast.makeText(this@MainActivity, msg, Toast.LENGTH_SHORT).show()
+////        }
+//
+//        val simpleTimePicker = findViewById<View>(R.id.timePicker) as TimePicker
+//        simpleTimePicker.setIs24HourView(true) // used to display AM/PM mode
+//
+//        simpleTimePicker.setOnTimeChangedListener(OnTimeChangedListener { view, hour, minute     ->
+////            Toast.makeText(applicationContext, "$hourOfDay  $minute", Toast.LENGTH_SHORT).show()
+//            timeLamp = hour.toString() +":"+ minute
+//        })
+//        timeLamp = hour
+//
+//        tvSaveSchedule.setOnClickListener {
+//            mDatabaseReference!!.child("new/ruangan").child(idRuanganSchedule!!)
+//                .child("schedule").child(barang!!.key!!).child("state").setValue(stateLamp)
+//            mDatabaseReference!!.child("new/ruangan").child(idRuanganSchedule!!)
+//                .child("schedule").child(barang!!.key!!).child("day").setValue(day)
+//            mDatabaseReference!!.child("new/ruangan").child(idRuanganSchedule!!)
+//                .child("schedule").child(barang!!.key!!).child("month").setValue(month)
+//            mDatabaseReference!!.child("new/ruangan").child(idRuanganSchedule!!)
+//                .child("schedule").child(barang!!.key!!).child("year").setValue(year)
+//            mDatabaseReference!!.child("new/ruangan").child(idRuanganSchedule!!)
+//                .child("schedule").child(barang!!.key!!).child("hour").setValue(hour)
+//            mDatabaseReference!!.child("new/ruangan").child(idRuanganSchedule!!)
+//                .child("schedule").child(barang!!.key!!).child("minute").setValue(minute)
+//            mDatabaseReference!!.child("new/ruangan").child(idRuanganSchedule!!)
+//                .child("schedule").child(barang!!.key!!).child("time").setValue(timeLamp)
+//        }
 
     }
 
