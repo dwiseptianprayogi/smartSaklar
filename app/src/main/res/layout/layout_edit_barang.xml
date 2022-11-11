@@ -7,16 +7,27 @@
     <com.google.android.material.textfield.TextInputLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
-
         <EditText
-            android:id="@+id/nama_barang"
+            android:id="@+id/idAlat"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="1.0"
-            android:hint="Masukan Ruangan"
+            android:layout_weight="1"
+            android:hint="Masukan ID Ruangan"
             android:singleLine="true" />
-
     </com.google.android.material.textfield.TextInputLayout>
+
+<!--    <com.google.android.material.textfield.TextInputLayout-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="wrap_content">-->
+<!--        <EditText-->
+<!--            android:id="@+id/nama_barang"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:layout_weight="1.0"-->
+<!--            android:hint="Masukan Nama Ruangan"-->
+<!--            android:singleLine="true" />-->
+
+<!--    </com.google.android.material.textfield.TextInputLayout>-->
 
 <!--    <com.google.android.material.textfield.TextInputLayout-->
 <!--        android:layout_width="match_parent"-->

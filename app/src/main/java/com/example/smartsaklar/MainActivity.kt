@@ -3,8 +3,10 @@ package com.example.smartsaklar
 import android.app.Activity
 import android.app.AlertDialog
 import android.app.Dialog
+import android.content.Context
 import android.graphics.Color
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.view.WindowManager
 import android.widget.*
@@ -21,12 +23,17 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.navigation.NavigationView
 import com.google.firebase.FirebaseApp
 import com.google.firebase.database.*
+import org.json.JSONArray
+import org.json.JSONTokener
+import java.time.Month
+import java.time.Year
 import java.util.*
 
 
 class MainActivity : AppCompatActivity(), MainAdapter.FirebaseDataListener, MainAdapterSchedule.FirebaseDataListener {
 
-    private var mEditNama: EditText? = null
+//    private var mEditNama: EditText? = null
+    private var idAlat: EditText? = null
     private var namaWifi:EditText? = null
     private var passWifi:EditText? = null
 
@@ -34,6 +41,7 @@ class MainActivity : AppCompatActivity(), MainAdapter.FirebaseDataListener, Main
     private var mAdapter: MainAdapter? = null
     private var daftarBarang: ArrayList<ModelBarang?>? = null
     private var mDatabaseReference: DatabaseReference? = null
+    private var mDatabaseReference2: DatabaseReference? = null
     private var mFirebaseInstance: FirebaseDatabase? = null
 
     private var timeLamp : String? = null
@@ -45,6 +53,18 @@ class MainActivity : AppCompatActivity(), MainAdapter.FirebaseDataListener, Main
     private var day : String? = null
     private var month : String? = null
     private var year : String? = null
+
+    private var dayEdit:String? = null
+    private var monthEdit:String? = null
+    private var yearEdit:String? = null
+    private var hourEdit:String? = null
+    private var minuteEdit:String? = null
+
+    private var stateLamp2:String? = null
+
+    private var idRuanganSchedule : String? = null
+
+    private var idRuangan : String? = null
 
     private var mRecyclerViewSchedule: RecyclerView? = null
     private var mAdapterSchedule: MainAdapterSchedule? = null
@@ -71,7 +91,7 @@ class MainActivity : AppCompatActivity(), MainAdapter.FirebaseDataListener, Main
         FirebaseApp.initializeApp(this)
         mFirebaseInstance = FirebaseDatabase.getInstance()
         mDatabaseReference = mFirebaseInstance!!.getReference("smartButton")
-        mDatabaseReference!!.child("data_ruangan")
+        mDatabaseReference!!.child("new").child("ruangan")
             .addValueEventListener(object : ValueEventListener {
                 override fun onDataChange(dataSnapshot: DataSnapshot) {
                     daftarBarang = ArrayList()
@@ -151,7 +171,7 @@ class MainActivity : AppCompatActivity(), MainAdapter.FirebaseDataListener, Main
     }
 
     override fun onItemClick(barang: ModelBarang?, position: Int) {
-//        Toast.makeText(this, "show : "+ position,Toast.LENGTH_SHORT).show()
+        Toast.makeText(this, "show : "+ position,Toast.LENGTH_SHORT).show()
         val btn1 = barang!!.lampu1
         val btn2 = barang.lampu2
         if (btn1=="on"||btn2=="on"){
@@ -159,8 +179,8 @@ class MainActivity : AppCompatActivity(), MainAdapter.FirebaseDataListener, Main
             barang.lampu2 = "off"
             val nama = barang.nama
 
-            mDatabaseReference!!.child("state").setValue("1")
-            mDatabaseReference!!.child("data_ruangan").child(barang!!.key!!).child("lampu1")
+            mDatabaseReference!!.child("new/state").setValue("1")
+            mDatabaseReference!!.child("new/ruangan").child(barang!!.key!!).child("lampu1")
                 .setValue(barang.lampu1).addOnSuccessListener {
                     Toast.makeText(
                         this@MainActivity,
@@ -168,7 +188,7 @@ class MainActivity : AppCompatActivity(), MainAdapter.FirebaseDataListener, Main
                         Toast.LENGTH_LONG
                     ).show()
                 }
-            mDatabaseReference!!.child("data_ruangan").child(barang!!.key!!).child("lampu2")
+            mDatabaseReference!!.child("new/ruangan").child(barang!!.key!!).child("lampu2")
                 .setValue(barang.lampu2).addOnSuccessListener {
                     Toast.makeText(
                         this@MainActivity,
@@ -182,8 +202,8 @@ class MainActivity : AppCompatActivity(), MainAdapter.FirebaseDataListener, Main
             barang.lampu2 = "on"
 //            updateDataBarang(barang)
             val nama = barang.nama
-            mDatabaseReference!!.child("state").setValue("1")
-            mDatabaseReference!!.child("data_ruangan").child(barang!!.key!!).child("lampu1")
+            mDatabaseReference!!.child("new/state").setValue("1")
+            mDatabaseReference!!.child("new/ruangan").child(barang!!.key!!).child("lampu1")
                 .setValue(barang.lampu1).addOnSuccessListener {
                     Toast.makeText(
                         this@MainActivity,
@@ -191,7 +211,7 @@ class MainActivity : AppCompatActivity(), MainAdapter.FirebaseDataListener, Main
                         Toast.LENGTH_LONG
                     ).show()
                 }
-            mDatabaseReference!!.child("data_ruangan").child(barang!!.key!!).child("lampu2")
+            mDatabaseReference!!.child("new/ruangan").child(barang!!.key!!).child("lampu2")
                 .setValue(barang.lampu2).addOnSuccessListener {
                     Toast.makeText(
                         this@MainActivity,
@@ -200,7 +220,6 @@ class MainActivity : AppCompatActivity(), MainAdapter.FirebaseDataListener, Main
                     ).show()
                 }
         }
-
     }
 
     override fun onItemClick2(barang: ModelBarang?, position: Int) {
@@ -209,8 +228,8 @@ class MainActivity : AppCompatActivity(), MainAdapter.FirebaseDataListener, Main
         if (btn1=="off"){
             barang.lampu1 = "on"
 //            updateDataBarang(barang)
-            mDatabaseReference!!.child("state").setValue("1")
-            mDatabaseReference!!.child("data_ruangan").child(barang!!.key!!).child("lampu1")
+            mDatabaseReference!!.child("new/state").setValue("1")
+            mDatabaseReference!!.child("new/ruangan").child(barang!!.key!!).child("lampu1")
                 .setValue(barang.lampu1).addOnSuccessListener {
                     Toast.makeText(
                         this@MainActivity,
@@ -226,7 +245,7 @@ class MainActivity : AppCompatActivity(), MainAdapter.FirebaseDataListener, Main
             barang.lampu1 = "off"
 //            updateDataBarang(barang)
             mDatabaseReference!!.child("state").setValue("1")
-            mDatabaseReference!!.child("data_ruangan").child(barang!!.key!!).child("lampu1")
+            mDatabaseReference!!.child("new/ruangan").child(barang!!.key!!).child("lampu1")
                 .setValue(barang.lampu1).addOnSuccessListener {
                     Toast.makeText(
                         this@MainActivity,
@@ -242,8 +261,8 @@ class MainActivity : AppCompatActivity(), MainAdapter.FirebaseDataListener, Main
         if (btn1=="off"){
             barang.lampu2 = "on"
 //            updateDataBarang(barang)
-            mDatabaseReference!!.child("state").setValue("1")
-            mDatabaseReference!!.child("data_ruangan").child(barang!!.key!!).child("lampu2")
+            mDatabaseReference!!.child("new/state").setValue("1")
+            mDatabaseReference!!.child("new/ruangan").child(barang!!.key!!).child("lampu2")
                 .setValue(barang.lampu2).addOnSuccessListener {
                     Toast.makeText(
                         this@MainActivity,
@@ -255,8 +274,8 @@ class MainActivity : AppCompatActivity(), MainAdapter.FirebaseDataListener, Main
         if (btn1=="on"){
             barang.lampu2 = "off"
 //            updateDataBarang(barang)
-            mDatabaseReference!!.child("state").setValue("1")
-            mDatabaseReference!!.child("data_ruangan").child(barang!!.key!!).child("lampu2")
+            mDatabaseReference!!.child("new/state").setValue("1")
+            mDatabaseReference!!.child("new/ruangan").child(barang!!.key!!).child("lampu2")
                 .setValue(barang.lampu2).addOnSuccessListener {
                     Toast.makeText(
                         this@MainActivity,
@@ -307,12 +326,6 @@ class MainActivity : AppCompatActivity(), MainAdapter.FirebaseDataListener, Main
         })
         timeLamp = hour +":"+ minute
 
-//        if (hour!!.toInt() <10 || minute!!.toInt() <10){
-//            timeLamp = "0"+hour +":"+ "0"+minute
-//        } else{
-//
-//        }
-
         tvSaveSchedule.setOnClickListener {
             dialogSchedule(barang)
         }
@@ -325,13 +338,18 @@ class MainActivity : AppCompatActivity(), MainAdapter.FirebaseDataListener, Main
         imgCancelSchedule.setOnClickListener {
             schedule.visibility = View.GONE
         }
+
+        idRuanganSchedule = barang!!.key!!
+
+        Toast.makeText(this, idRuanganSchedule, Toast.LENGTH_SHORT).show()
+
         mRecyclerViewSchedule = findViewById(R.id.rvSchedule)
         mRecyclerViewSchedule!!.setHasFixedSize(true)
         mRecyclerViewSchedule!!.setLayoutManager(LinearLayoutManager(this))
         FirebaseApp.initializeApp(this)
         mFirebaseInstanceSchedule = FirebaseDatabase.getInstance()
         mDatabaseReferenceSchedule = mFirebaseInstanceSchedule!!.getReference("smartButton")
-        mDatabaseReferenceSchedule!!.child("data_ruangan").child(barang!!.key!!).child("schedule")
+        mDatabaseReferenceSchedule!!.child("new/ruangan").child(barang!!.key!!).child("schedule")
             .addValueEventListener(object : ValueEventListener {
                 override fun onDataChange(dataSnapshot: DataSnapshot) {
                     daftarSchedule = ArrayList()
@@ -352,14 +370,152 @@ class MainActivity : AppCompatActivity(), MainAdapter.FirebaseDataListener, Main
                 }
             })
     }
+//    override fun onItemClick8(barang: ModelBarang?, position: Int) {
+////        mDatabaseReference!!.child("new/state").setValue("1")
+//        mDatabaseReference!!.child("new/update/id").setValue(barang!!.key!!)
+//            .addOnSuccessListener {
+//                Toast.makeText(
+//                    this@MainActivity,
+//                    "Please Turn On The Smart Switch!",
+//                    Toast.LENGTH_LONG
+//                ).show()
+//            }
+//        mDatabaseReference!!.child("new/update/state").setValue("1")
+//    }
 
     override fun onItemClickSceduleEdit(barang: ModelBarangSchedule?, position: Int) {
-        TODO("Not yet implemented")
+        Toast.makeText(this, idRuanganSchedule, Toast.LENGTH_SHORT).show()
+        val btnState = findViewById<ToggleButton>(R.id.btnScheduleState)
+
+        mDatabaseReference!!.child("new/ruangan").child(idRuanganSchedule!!).child("schedule")
+            .child(barang!!.key!!).child("day").get().addOnSuccessListener {
+                dayEdit = it.value as String?
+                day =  dayEdit
+            }
+        mDatabaseReference!!.child("new/ruangan").child(idRuanganSchedule!!).child("schedule")
+            .child(barang!!.key!!).child("month").get().addOnSuccessListener {
+                monthEdit = it.value as String?
+                month = monthEdit
+            }
+        mDatabaseReference!!.child("new/ruangan").child(idRuanganSchedule!!).child("schedule")
+            .child(barang!!.key!!).child("year").get().addOnSuccessListener {
+                yearEdit = it.value as String?
+                year = yearEdit
+            }
+        mDatabaseReference!!.child("new/ruangan").child(idRuanganSchedule!!).child("schedule")
+            .child(barang!!.key!!).child("hour").get().addOnSuccessListener {
+                hourEdit = it.value as String?
+                hour = hourEdit
+            }
+        mDatabaseReference!!.child("new/ruangan").child(idRuanganSchedule!!).child("schedule")
+            .child(barang!!.key!!).child("minute").get().addOnSuccessListener {
+                minuteEdit = it.value as String?
+                minute = minuteEdit
+            }
+
+        mDatabaseReference!!.child("new/ruangan").child(idRuanganSchedule!!).child("schedule")
+            .child(barang!!.key!!).child("state").get().addOnSuccessListener {
+                stateLamp2= it.value as String?
+                btnState.setText(stateLamp2)
+            }
+        mDatabaseReference!!.child("new/ruangan").child(idRuanganSchedule!!).child("schedule")
+            .child(barang!!.key!!).get().addOnSuccessListener {
+//                log(it.value as String?)
+                Log.e("firebase", "data schedule : ${it.value}" )
+                val jsonArray = JSONTokener(it.value.toString()).nextValue() as JSONArray
+                for (i in 0 until jsonArray.length()) {
+                    // ID
+                    val hour = jsonArray.getJSONObject(i).getString("hour")
+                    Log.i("hour: ", hour)
+
+                    val month = jsonArray.getJSONObject(i).getString("month")
+                    Log.i("month: ", month)
+
+                    val year = jsonArray.getJSONObject(i).getString("year")
+                    Log.i("year: ", year)
+
+                    val state = jsonArray.getJSONObject(i).getString("state")
+                    Log.i("state: ", state)
+
+                    // Employee Name
+                    val time = jsonArray.getJSONObject(i).getString("time")
+                    Log.i("time: ", time)
+
+                    // Employee Salary
+                    val day = jsonArray.getJSONObject(i).getString("day")
+                    Log.i("day: ", day)
+
+                    val minute = jsonArray.getJSONObject(i).getString("minute")
+                    Log.i("minute: ", minute)
+
+                }
+            }
+
+        val schedule = findViewById<FrameLayout>(R.id.sheet)
+        schedule.visibility = View.VISIBLE
+        val imgCancelSchedule = findViewById<ImageView>(R.id.imgShceduleCancel)
+        imgCancelSchedule.setOnClickListener {
+            schedule.visibility = View.GONE
+        }
+        val tvSaveSchedule = findViewById<TextView>(R.id.tvSchedulSave)
+        val datePicker = findViewById<DatePicker>(R.id.date_Picker)
+//        Toast.makeText(this, dayEdit, Toast.LENGTH_SHORT).show()
+//        val today = date
+//        val today = Calendar.getInstance()
+
+//        Toast.makeText(applicationContext, today.toString(), Toast.LENGTH_LONG).show()
+
+        val stateLamp = btnState.text
+
+        dateLamp = day+"/"+month+"/"+year
+        dateLampId = day+month+year
+//        datePicker.init(
+//            year!!.toInt(),
+//            month!!.toInt(),
+//            day!!.toInt()
+//        ) { view, year, month, day ->
+//            val msg = "You Selected: $day/$month/$year"
+//            dateLamp = day.toString()+"/"+month+"/"+year
+////            Toast.makeText(this@MainActivity, msg, Toast.LENGTH_SHORT).show()
+//        }
+
+        val simpleTimePicker = findViewById<View>(R.id.timePicker) as TimePicker
+        simpleTimePicker.setIs24HourView(true) // used to display AM/PM mode
+
+        simpleTimePicker.setOnTimeChangedListener(OnTimeChangedListener { view, hour, minute     ->
+//            Toast.makeText(applicationContext, "$hourOfDay  $minute", Toast.LENGTH_SHORT).show()
+            timeLamp = hour.toString() +":"+ minute
+        })
+        timeLamp = hour
+
+        tvSaveSchedule.setOnClickListener {
+            mDatabaseReference!!.child("new/ruangan").child(idRuanganSchedule!!)
+                .child("schedule").child(barang!!.key!!).child("state").setValue(stateLamp)
+            mDatabaseReference!!.child("new/ruangan").child(idRuanganSchedule!!)
+                .child("schedule").child(barang!!.key!!).child("day").setValue(day)
+            mDatabaseReference!!.child("new/ruangan").child(idRuanganSchedule!!)
+                .child("schedule").child(barang!!.key!!).child("month").setValue(month)
+            mDatabaseReference!!.child("new/ruangan").child(idRuanganSchedule!!)
+                .child("schedule").child(barang!!.key!!).child("year").setValue(year)
+            mDatabaseReference!!.child("new/ruangan").child(idRuanganSchedule!!)
+                .child("schedule").child(barang!!.key!!).child("hour").setValue(hour)
+            mDatabaseReference!!.child("new/ruangan").child(idRuanganSchedule!!)
+                .child("schedule").child(barang!!.key!!).child("minute").setValue(minute)
+            mDatabaseReference!!.child("new/ruangan").child(idRuanganSchedule!!)
+                .child("schedule").child(barang!!.key!!).child("time").setValue(timeLamp)
+        }
+
     }
 
     override fun onItemClickSceduleDelete(barang: ModelBarangSchedule?, position: Int) {
+//        mDatabaseReference2 = mFirebaseInstance!!.getReference("smartButton/new/ruangan").child(barang!!.key!!)
+//            .child("schedule").child(barang!!.key!!)
+        Toast.makeText(this, idRuanganSchedule, Toast.LENGTH_SHORT).show()
         if (mDatabaseReference != null) {
-            mDatabaseReference!!.child("data_ruangan").child(barang!!.key!!).child("schedule").child(barang.key!!)
+//            deleteDataSchedule(barang!!)
+
+            mDatabaseReference!!.child("new/ruangan").child(idRuanganSchedule!!)
+                .child("schedule").child(barang!!.key!!)
                 .removeValue().addOnSuccessListener {
                     Toast.makeText(
                         this@MainActivity,
@@ -371,18 +527,26 @@ class MainActivity : AppCompatActivity(), MainAdapter.FirebaseDataListener, Main
     }
 
     private fun dialogSchedule(barang: ModelBarang?) {
-        Toast.makeText(applicationContext,dateLamp.toString(), Toast.LENGTH_SHORT).show()
-        Toast.makeText(applicationContext,timeLamp.toString(), Toast.LENGTH_SHORT).show()
+//        Toast.makeText(applicationContext,dateLamp.toString(), Toast.LENGTH_SHORT).show()
+//        Toast.makeText(applicationContext,timeLamp.toString(), Toast.LENGTH_SHORT).show()
         val btnState = findViewById<ToggleButton>(R.id.btnScheduleState)
         val stateLamp = btnState.text
         val stateSchedule = stateLamp.toString()
         val waktuSchedule  = dateLamp+" "+timeLamp
-        val waktuScheduleId = dateLampId+" "+timeLamp
+
+        val day = day
+        val month = month
+        val year = year
+        val hour = hour
+        val minute = minute
+
+
+        val waktuScheduleId = dateLampId+timeLamp
 
 //        submitDataSchedule(ModelBarang(stateSchedule, waktuSchedule))
-        mDatabaseReference!!.child("data_ruangan").child(barang!!.key!!).child("schedule")
+        mDatabaseReference!!.child("new/ruangan").child(barang!!.key!!).child("schedule")
             .child(waktuScheduleId)
-            .setValue(ModelBarang(stateSchedule,waktuSchedule )).addOnSuccessListener (
+            .setValue(ModelBarang(stateSchedule,waktuSchedule, day!!, month!!, year!!, hour!!, minute!!)).addOnSuccessListener (
                 this
             ){
                 val schedule = findViewById<FrameLayout>(R.id.sheet)
@@ -396,9 +560,15 @@ class MainActivity : AppCompatActivity(), MainAdapter.FirebaseDataListener, Main
             }
     }
 
-    private fun submitDataSchedule(barang: ModelBarang) {
+    private fun deleteDataSchedule(barang: ModelBarangSchedule) {
 //        mDatabaseReference!!.child("data_ruangan").push()
-
+//        mDatabaseReference2!!.child(barang!!.key!!).removeValue().addOnSuccessListener {
+//                    Toast.makeText(
+//                        this@MainActivity,
+//                        "Data berhasil di hapus !",
+//                        Toast.LENGTH_LONG
+//                    ).show()
+//                }
     }
 
 //    override fun onDataClick(barang: ModelBarang?, position: Int) {
@@ -432,17 +602,33 @@ class MainActivity : AppCompatActivity(), MainAdapter.FirebaseDataListener, Main
         val builder = AlertDialog.Builder(this)
         builder.setTitle("Tambah Ruangan")
         val view = layoutInflater.inflate(R.layout.layout_edit_barang, null)
-        mEditNama = view.findViewById(R.id.nama_barang)
+//        mEditNama = view.findViewById(R.id.nama_barang)
+        idAlat = view.findViewById(R.id.idAlat)
         builder.setView(view)
         builder.setPositiveButton(
             "SIMPAN"
         ) { dialog, id ->
-            val namaBarang = mEditNama!!.getText().toString()
+//            val namaBarang = mEditNama!!.getText().toString()
+            idRuangan = idAlat!!.getText().toString()
+            val namaBarang = idRuangan
             val lampuRuangan = "off"
             val lampuRuangan2 = "off"
+            val idStat = "No"
 //            val lampuRuangan3 = "off"
-            if (!namaBarang.isEmpty()) {
-                submitDataBarang(ModelBarang(namaBarang, lampuRuangan , lampuRuangan2))
+            if (!idRuangan!!.isEmpty()) {
+                mDatabaseReference!!.child("new").child(idRuangan!!).get().addOnSuccessListener {
+                    Log.i("firebase", "Got value ${it.value}")
+                    if(it.value == null){
+                        submitDataBarang(ModelBarang(namaBarang,idRuangan, lampuRuangan, lampuRuangan2, idStat))
+                        mDatabaseReference!!.child("new/update/id").setValue(idRuangan)
+                        mDatabaseReference!!.child("new/update/state").setValue("1")
+                    }
+                    else{
+                        Toast.makeText(this, "ID Have Been Created Please Insert New ID!", Toast.LENGTH_SHORT).show()
+                    }
+                }.addOnFailureListener{
+                    Log.e("firebase", "Error getting data", it)
+                }
             } else {
                 Toast.makeText(this@MainActivity, "Data harus di isi!", Toast.LENGTH_LONG).show()
             }
@@ -461,6 +647,15 @@ class MainActivity : AppCompatActivity(), MainAdapter.FirebaseDataListener, Main
         namaWifi = view.findViewById(R.id.nama_wifi)
         passWifi = view.findViewById(R.id.pass_wifi)
 
+        mDatabaseReference!!.child("wifi").child("ssid").get().addOnSuccessListener {
+            val ssid = it.value
+            namaWifi!!.setText(ssid.toString())
+        }
+
+        mDatabaseReference!!.child("wifi").child("pass").get().addOnSuccessListener {
+            val pass = it.value
+            namaWifi!!.setText(pass.toString())
+        }
 
         builder.setView(view)
         builder.setPositiveButton(
@@ -487,16 +682,16 @@ class MainActivity : AppCompatActivity(), MainAdapter.FirebaseDataListener, Main
         val builder = AlertDialog.Builder(this)
         builder.setTitle("Edit Data Ruangan")
         val view = layoutInflater.inflate(R.layout.layout_edit_barang, null)
-        mEditNama = view.findViewById(R.id.nama_barang)
-        mEditNama!!.setText(barang!!.nama)
+        idAlat = view.findViewById(R.id.idAlat)
+        idAlat!!.setText(barang!!.nama)
 
         builder.setView(view)
         builder.setPositiveButton(
             "SIMPAN"
         ) { dialog, id ->
-            barang.nama = mEditNama!!.getText().toString()
+            barang.nama = idAlat!!.getText().toString()
 //            updateDataBarang(barang)
-            mDatabaseReference!!.child("data_ruangan").child(barang!!.key!!)
+            mDatabaseReference!!.child("new").child("ruangan").child(barang!!.key!!).child("nama")
                 .setValue(barang.nama).addOnSuccessListener {
                     Toast.makeText(
                         this@MainActivity,
@@ -513,7 +708,7 @@ class MainActivity : AppCompatActivity(), MainAdapter.FirebaseDataListener, Main
     }
 
     private fun submitDataBarang(barang: ModelBarang) {
-        mDatabaseReference!!.child("data_ruangan").push()
+        mDatabaseReference!!.child("new").child("ruangan").child(idRuangan.toString())
             .setValue(barang).addOnSuccessListener(
                 this
             ) {
@@ -539,7 +734,7 @@ class MainActivity : AppCompatActivity(), MainAdapter.FirebaseDataListener, Main
     private fun hapusDataBarang(barang: ModelBarang) {
 
         if (mDatabaseReference != null) {
-            mDatabaseReference!!.child("data_ruangan").child(barang!!.key!!)
+            mDatabaseReference!!.child("new").child("ruangan").child(barang!!.key!!)
                 .removeValue().addOnSuccessListener {
                     Toast.makeText(
                         this@MainActivity,

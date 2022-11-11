@@ -2,6 +2,7 @@ package com.example.smartsaklar
 
 import android.view.View
 import android.widget.Button
+import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.cardview.widget.CardView
@@ -42,6 +43,12 @@ class MainViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
     @JvmField
     var showSchedule: Button = itemView.findViewById(R.id.btnScheduleShow)
+
+    @JvmField
+    var idStat: TextView = itemView.findViewById(R.id.idStat)
+
+//    @JvmField
+//    var deleteSchedule: ImageView = itemView.findViewById(R.id.imgShceduleDelete)
 
 //    @JvmField
 //    var addSchedule: Button = itemView.findViewById(R.id.rvSchedule)

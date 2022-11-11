@@ -10,11 +10,18 @@ class ModelBarangSchedule {
     var Time: String? = null
     var State: String? = null
 
+
+
     constructor() {}
 
-    constructor(time: String?,state: String? ) {
+    constructor(Key:String?) {
+        key = Key
+    }
+
+    constructor(time: String?,state: String?) {
         Time = time
         State = state
+
 //        lampu2 = lampuRuangan2
 //        lampu = lampuRuangan3
 //        merk = merkBarang

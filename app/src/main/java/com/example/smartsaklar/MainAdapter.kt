@@ -62,6 +62,16 @@ class MainAdapter(private val context: Context,
         holder.namaBarang.text = (daftarBarang?.get(position)?.nama)
         holder.btn1.text = (daftarBarang?.get(position)?.lampu1)
         holder.btn2.text = (daftarBarang?.get(position)?.lampu2)
+        holder.idStat.text = (daftarBarang?.get(position)?.idStat)
+//        holder.idAlat.text
+        val idStat = (daftarBarang?.get(position)?.idStat)
+        if(idStat == "Connected"){
+            holder.idStat.text = idStat
+            holder.idStat.setTextColor(ContextCompat.getColor(context, R.color.green))
+        }
+        if (idStat == "No"){
+            holder.idStat.text = "No Connected"
+        }
 //        holder.txtOption.text = "kk"
 //        holder.btn.text = (daftarBarang?.get(position)?.lampu)
 
@@ -103,6 +113,9 @@ class MainAdapter(private val context: Context,
         holder.btn2.setOnClickListener { listener.onItemClick3(daftarBarang?.get(position), position) }
         holder.addSchedule.setOnClickListener { listener.onItemClick6(daftarBarang?.get(position), position) }
         holder.showSchedule.setOnClickListener { listener.onItemClick7(daftarBarang?.get(position), position) }
+
+//        holder.deleteSchedule.setOnClickListener { listener.onItemClickSceduleDelete(daftarBarang?.get(position), position) }
+
         holder.txtOption.setOnClickListener {
             val popupMenu = PopupMenu(context, holder.txtOption)
             popupMenu.inflate(R.menu.option_menu)
@@ -116,6 +129,10 @@ class MainAdapter(private val context: Context,
                         listener.onItemClick5(daftarBarang?.get(position), position)
 //                        hapusDataBarang(barang!!)
                     }
+//                    R.id.menu_connect_id -> {
+//                        listener.onItemClick8(daftarBarang?.get(position), position)
+////                        hapusDataBarang(barang!!)
+//                    }
                 }
                 false
             }
@@ -128,82 +145,7 @@ class MainAdapter(private val context: Context,
 
         var hideShow = 0
         holder.showHide.setOnClickListener {
-//            Toast.makeText(context, "show :"+txt2,Toast.LENGTH_SHORT).show()
 
-//            val args = Bundle()
-//            val jadwal = holder.schedule.toString()
-//            args.putString("key", jadwal)
-//
-//            holder.showHide.text = "Hide More Option ⬆"
-//            holder.schedule.setOnClickListener { listener.onItemClick6(daftarBarang?.get(position), position)}
-//            mRecyclerViewSchedule = holder.schedule
-//            mRecyclerViewSchedule!!.setHasFixedSize(true)
-//            mRecyclerViewSchedule!!.setLayoutManager(LinearLayoutManager(context))
-//            FirebaseApp.initializeApp(context)
-//
-//            mFirebaseInstance = FirebaseDatabase.getInstance()
-//            mDatabaseReference = mFirebaseInstance!!.getReference("smartButton")
-//            mDatabaseReference!!.child("data_ruangan")
-//                .addValueEventListener(object : ValueEventListener {
-//                    override fun onDataChange(dataSnapshot: DataSnapshot) {
-//                        for (mDataSnapshot in dataSnapshot.children) {
-//                            val barang1 = mDataSnapshot.getValue(ModelBarang::class.java)!!
-//                            barang1.key = mDataSnapshot.key
-////                            mDatabaseReferenceSchedule = mFirebaseInstanceSchedule!!.getReference("smartButton")
-//                            mDatabaseReference!!.child("data_ruangan").child(barang1.key!!).child("schedule")
-//                                .addValueEventListener(object : ValueEventListener {
-//                                    override fun onDataChange(dataSnapshot: DataSnapshot) {
-//                                        daftarSchedule = ArrayList()
-//                                        for (mDataSnapshot in dataSnapshot.children) {
-//                                            val barang = mDataSnapshot.getValue(ModelBarangSchedule::class.java)!!
-//                                            barang.key = mDataSnapshot.key
-//                                            daftarSchedule!!.add(barang)
-//                                        }
-//                                        mAdapterSchedule = MainAdapterSchedule(context, daftarSchedule)
-//                                        mRecyclerViewSchedule!!.setAdapter(mAdapterSchedule)
-//                                    }
-//                                    override fun onCancelled(databaseError: DatabaseError) {
-//                                        Toast.makeText(
-//                                            context,
-//                                            databaseError.details + " " + databaseError.message, Toast.LENGTH_LONG
-//                                        ).show()
-//                                    }
-//                                })
-////                            daftarBarang!!.add(barang)
-//                        }
-////                        mAdapter = MainAdapter(this@MainActivity, daftarBarang)
-////                        mRecyclerView!!.setAdapter(mAdapter)
-//                    }
-//
-//                    override fun onCancelled(databaseError: DatabaseError) {
-//                        Toast.makeText(
-//                            context,
-//                            databaseError.details + " " + databaseError.message, Toast.LENGTH_LONG
-//                        ).show()
-//                    }
-//                })
-
-//            mFirebaseInstanceSchedule = FirebaseDatabase.getInstance()
-//            mDatabaseReferenceSchedule = mFirebaseInstanceSchedule!!.getReference("smartButton")
-//            mDatabaseReferenceSchedule!!.child("data_ruangan").child(barang!!.key!!).child("schedule")
-//                .addValueEventListener(object : ValueEventListener {
-//                    override fun onDataChange(dataSnapshot: DataSnapshot) {
-//                        daftarSchedule = ArrayList()
-//                        for (mDataSnapshot in dataSnapshot.children) {
-//                            val barang = mDataSnapshot.getValue(ModelBarangSchedule::class.java)!!
-//                            barang.key = mDataSnapshot.key
-//                            daftarSchedule!!.add(barang)
-//                        }
-//                        mAdapterSchedule = MainAdapterSchedule(context, daftarSchedule)
-//                        mRecyclerViewSchedule!!.setAdapter(mAdapterSchedule)
-//                    }
-//                    override fun onCancelled(databaseError: DatabaseError) {
-//                        Toast.makeText(
-//                            context,
-//                            databaseError.details + " " + databaseError.message, Toast.LENGTH_LONG
-//                        ).show()
-//                    }
-//                })
 
             hideShow++
             if(hideShow == 1){
@@ -244,6 +186,8 @@ class MainAdapter(private val context: Context,
         fun onItemClick5(barang:ModelBarang?, position: Int)
         fun onItemClick6(barang:ModelBarang?, position: Int)
         fun onItemClick7(barang:ModelBarang?, position: Int)
+//        fun onItemClick8(barang:ModelBarang?, position: Int)
+//        fun onItemClickSceduleDelete(barang:ModelBarang?, position: Int)
     }
 
     init {
