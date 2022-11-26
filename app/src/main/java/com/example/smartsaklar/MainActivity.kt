@@ -32,10 +32,10 @@ import java.util.*
 
 class MainActivity : AppCompatActivity(), MainAdapter.FirebaseDataListener, MainAdapterSchedule.FirebaseDataListener {
 
-//    private var mEditNama: EditText? = null
+    //    private var mEditNama: EditText? = null
     private var idAlat: EditText? = null
-    private var namaWifi:EditText? = null
-    private var passWifi:EditText? = null
+    private var namaWifi: EditText? = null
+    private var passWifi: EditText? = null
 
     private var mRecyclerView: RecyclerView? = null
     private var mAdapter: MainAdapter? = null
@@ -44,27 +44,27 @@ class MainActivity : AppCompatActivity(), MainAdapter.FirebaseDataListener, Main
     private var mDatabaseReference2: DatabaseReference? = null
     private var mFirebaseInstance: FirebaseDatabase? = null
 
-    private var timeLamp : String? = null
-    private var dateLamp : String? = null
-    private var dateLampId : String? = null
-    private var hour : String? = null
-    private var minute : String? = null
+    private var timeLamp: String? = null
+    private var dateLamp: String? = null
+    private var dateLampId: String? = null
+    private var hour: String? = null
+    private var minute: String? = null
 
-    private var day : String? = null
-    private var month : String? = null
-    private var year : String? = null
+    private var day: String? = null
+    private var month: String? = null
+    private var year: String? = null
 
-    private var dayEdit:String? = null
-    private var monthEdit:String? = null
-    private var yearEdit:String? = null
-    private var hourEdit:String? = null
-    private var minuteEdit:String? = null
+    private var dayEdit: String? = null
+    private var monthEdit: String? = null
+    private var yearEdit: String? = null
+    private var hourEdit: String? = null
+    private var minuteEdit: String? = null
 
-    private var stateLamp2:String? = null
+    private var stateLamp2: String? = null
 
-    private var idRuanganSchedule : String? = null
+    private var idRuanganSchedule: String? = null
 
-    private var idRuangan : String? = null
+    private var idRuangan: String? = null
 
     private var mRecyclerViewSchedule: RecyclerView? = null
     private var mAdapterSchedule: MainAdapterSchedule? = null
@@ -140,10 +140,10 @@ class MainActivity : AppCompatActivity(), MainAdapter.FirebaseDataListener, Main
             }
         })
 
-        addData.setOnClickListener{
+        addData.setOnClickListener {
             dialogTambahBarang()
         }
-        addWifi.setOnClickListener{
+        addWifi.setOnClickListener {
             dialogTambahWifi()
         }
 
@@ -171,10 +171,10 @@ class MainActivity : AppCompatActivity(), MainAdapter.FirebaseDataListener, Main
     }
 
     override fun onItemClick(barang: ModelBarang?, position: Int) {
-        Toast.makeText(this, "show : "+ position,Toast.LENGTH_SHORT).show()
+        Toast.makeText(this, "show : " + position, Toast.LENGTH_SHORT).show()
         val btn1 = barang!!.lampu1
         val btn2 = barang.lampu2
-        if (btn1=="on"||btn2=="on"){
+        if (btn1 == "on" || btn2 == "on") {
             barang.lampu1 = "off"
             barang.lampu2 = "off"
             val nama = barang.nama
@@ -197,7 +197,7 @@ class MainActivity : AppCompatActivity(), MainAdapter.FirebaseDataListener, Main
                     ).show()
                 }
         }
-        if (btn1=="off"&& btn2=="off"){
+        if (btn1 == "off" && btn2 == "off") {
             barang.lampu1 = "on"
             barang.lampu2 = "on"
 //            updateDataBarang(barang)
@@ -225,7 +225,7 @@ class MainActivity : AppCompatActivity(), MainAdapter.FirebaseDataListener, Main
     override fun onItemClick2(barang: ModelBarang?, position: Int) {
 //        barang.nama = mEditNama!!.getText().toString()
         val btn1 = barang!!.lampu1
-        if (btn1=="off"){
+        if (btn1 == "off") {
             barang.lampu1 = "on"
 //            updateDataBarang(barang)
             mDatabaseReference!!.child("new/state").setValue("1")
@@ -238,10 +238,12 @@ class MainActivity : AppCompatActivity(), MainAdapter.FirebaseDataListener, Main
                     ).show()
                 }
             val notificationHelper = NotificationHelper(this@MainActivity)
-            notificationHelper.sendHighPriorityNotification("Lampu 1 Mati Mohon Ganti!",
-                "", MainActivity::class.java)
+            notificationHelper.sendHighPriorityNotification(
+                "Lampu 1 Mati Mohon Ganti!",
+                "", MainActivity::class.java
+            )
         }
-        if (btn1=="on"){
+        if (btn1 == "on") {
             barang.lampu1 = "off"
 //            updateDataBarang(barang)
             mDatabaseReference!!.child("state").setValue("1")
@@ -258,7 +260,7 @@ class MainActivity : AppCompatActivity(), MainAdapter.FirebaseDataListener, Main
 
     override fun onItemClick3(barang: ModelBarang?, position: Int) {
         val btn1 = barang!!.lampu2
-        if (btn1=="off"){
+        if (btn1 == "off") {
             barang.lampu2 = "on"
 //            updateDataBarang(barang)
             mDatabaseReference!!.child("new/state").setValue("1")
@@ -271,7 +273,7 @@ class MainActivity : AppCompatActivity(), MainAdapter.FirebaseDataListener, Main
                     ).show()
                 }
         }
-        if (btn1=="on"){
+        if (btn1 == "on") {
             barang.lampu2 = "off"
 //            updateDataBarang(barang)
             mDatabaseReference!!.child("new/state").setValue("1")
@@ -286,9 +288,11 @@ class MainActivity : AppCompatActivity(), MainAdapter.FirebaseDataListener, Main
         }
 
     }
+
     override fun onItemClick4(barang: ModelBarang?, position: Int) {
         dialogUpdateBarang(barang)
     }
+
     override fun onItemClick5(barang: ModelBarang?, position: Int) {
         hapusDataBarang(barang!!)
     }
@@ -305,15 +309,16 @@ class MainActivity : AppCompatActivity(), MainAdapter.FirebaseDataListener, Main
         val today = Calendar.getInstance()
         year = today.get(Calendar.YEAR).toString()
         month = today.get(Calendar.MONTH).toString()
-        day =  today.get(Calendar.DAY_OF_MONTH).toString()
-        dateLamp = day+"/"+(month!!.toInt()+1)+"/"+year
-        dateLampId = day+(month!!.toInt()+1)+year
-        datePicker.init(today.get(Calendar.YEAR), today.get(Calendar.MONTH),
+        day = today.get(Calendar.DAY_OF_MONTH).toString()
+        dateLamp = day + "/" + (month!!.toInt() + 1) + "/" + year
+        dateLampId = day + (month!!.toInt() + 1) + year
+        datePicker.init(
+            today.get(Calendar.YEAR), today.get(Calendar.MONTH),
             today.get(Calendar.DAY_OF_MONTH)
         ) { view, year, month, day ->
             val month = month + 1
             val msg = "You Selected: $day/$month/$year"
-            dateLamp = day.toString()+"/"+month+"/"+year
+            dateLamp = day.toString() + "/" + month + "/" + year
 //            Toast.makeText(this@MainActivity, msg, Toast.LENGTH_SHORT).show()
         }
         val simpleTimePicker = findViewById<View>(R.id.timePicker) as TimePicker
@@ -322,9 +327,9 @@ class MainActivity : AppCompatActivity(), MainAdapter.FirebaseDataListener, Main
         minute = simpleTimePicker.minute.toString()
         simpleTimePicker.setOnTimeChangedListener(OnTimeChangedListener { view, hourOfDay, minute ->
 //            Toast.makeText(applicationContext, "$hourOfDay  $minute", Toast.LENGTH_SHORT).show()
-            timeLamp = hourOfDay.toString()+":"+minute
+            timeLamp = hourOfDay.toString() + ":" + minute
         })
-        timeLamp = hour +":"+ minute
+        timeLamp = hour + ":" + minute
 
         tvSaveSchedule.setOnClickListener {
             dialogSchedule(barang)
@@ -370,6 +375,7 @@ class MainActivity : AppCompatActivity(), MainAdapter.FirebaseDataListener, Main
                 }
             })
     }
+
 //    override fun onItemClick8(barang: ModelBarang?, position: Int) {
 ////        mDatabaseReference!!.child("new/state").setValue("1")
 //        mDatabaseReference!!.child("new/update/id").setValue(barang!!.key!!)
@@ -385,124 +391,18 @@ class MainActivity : AppCompatActivity(), MainAdapter.FirebaseDataListener, Main
 
     override fun onItemClickSceduleEdit(barang: ModelBarangSchedule?, position: Int) {
         Toast.makeText(this, idRuanganSchedule, Toast.LENGTH_SHORT).show()
-//        val btnState = findViewById<ToggleButton>(R.id.btnScheduleState)
-//
-//        mDatabaseReference!!.child("new/ruangan").child(idRuanganSchedule!!).child("schedule")
-//            .child(barang!!.key!!).child("day").get().addOnSuccessListener {
-//                dayEdit = it.value as String?
-//                day =  dayEdit
-//            }
-//        mDatabaseReference!!.child("new/ruangan").child(idRuanganSchedule!!).child("schedule")
-//            .child(barang!!.key!!).child("month").get().addOnSuccessListener {
-//                monthEdit = it.value as String?
-//                month = monthEdit
-//            }
-//        mDatabaseReference!!.child("new/ruangan").child(idRuanganSchedule!!).child("schedule")
-//            .child(barang!!.key!!).child("year").get().addOnSuccessListener {
-//                yearEdit = it.value as String?
-//                year = yearEdit
-//            }
-//        mDatabaseReference!!.child("new/ruangan").child(idRuanganSchedule!!).child("schedule")
-//            .child(barang!!.key!!).child("hour").get().addOnSuccessListener {
-//                hourEdit = it.value as String?
-//                hour = hourEdit
-//            }
-//        mDatabaseReference!!.child("new/ruangan").child(idRuanganSchedule!!).child("schedule")
-//            .child(barang!!.key!!).child("minute").get().addOnSuccessListener {
-//                minuteEdit = it.value as String?
-//                minute = minuteEdit
-//            }
-//
-//        mDatabaseReference!!.child("new/ruangan").child(idRuanganSchedule!!).child("schedule")
-//            .child(barang!!.key!!).child("state").get().addOnSuccessListener {
-//                stateLamp2= it.value as String?
-//                btnState.setText(stateLamp2)
-//            }
-//        mDatabaseReference!!.child("new/ruangan").child(idRuanganSchedule!!).child("schedule")
-//            .child(barang!!.key!!).get().addOnSuccessListener {
-////                log(it.value as String?)
-//                Log.e("firebase", "data schedule : ${it.value}" )
-//                val jsonArray = JSONTokener(it.value.toString()).nextValue() as JSONArray
-//                for (i in 0 until jsonArray.length()) {
-//                    // ID
-//                    val hour = jsonArray.getJSONObject(i).getString("hour")
-//                    Log.i("hour: ", hour)
-//
-//                    val month = jsonArray.getJSONObject(i).getString("month")
-//                    Log.i("month: ", month)
-//
-//                    val year = jsonArray.getJSONObject(i).getString("year")
-//                    Log.i("year: ", year)
-//
-//                    val state = jsonArray.getJSONObject(i).getString("state")
-//                    Log.i("state: ", state)
-//
-//                    // Employee Name
-//                    val time = jsonArray.getJSONObject(i).getString("time")
-//                    Log.i("time: ", time)
-//
-//                    // Employee Salary
-//                    val day = jsonArray.getJSONObject(i).getString("day")
-//                    Log.i("day: ", day)
-//
-//                    val minute = jsonArray.getJSONObject(i).getString("minute")
-//                    Log.i("minute: ", minute)
-//
-//                }
-//            }
-//
-//        val schedule = findViewById<FrameLayout>(R.id.sheet)
-//        schedule.visibility = View.VISIBLE
-//        val imgCancelSchedule = findViewById<ImageView>(R.id.imgShceduleCancel)
-//        imgCancelSchedule.setOnClickListener {
-//            schedule.visibility = View.GONE
-//        }
+
+        mDatabaseReference!!.child("new/ruangan").child(idRuanganSchedule!!).child("schedule")
+            .child(barang!!.key!!).get().addOnSuccessListener {
+//                log(it.value as String?)
+
+
+            }
+
 //        val tvSaveSchedule = findViewById<TextView>(R.id.tvSchedulSave)
-//        val datePicker = findViewById<DatePicker>(R.id.date_Picker)
-////        Toast.makeText(this, dayEdit, Toast.LENGTH_SHORT).show()
-////        val today = date
-////        val today = Calendar.getInstance()
-//
-////        Toast.makeText(applicationContext, today.toString(), Toast.LENGTH_LONG).show()
-//
-//        val stateLamp = btnState.text
-//
-//        dateLamp = day+"/"+month+"/"+year
-//        dateLampId = day+month+year
-////        datePicker.init(
-////            year!!.toInt(),
-////            month!!.toInt(),
-////            day!!.toInt()
-////        ) { view, year, month, day ->
-////            val msg = "You Selected: $day/$month/$year"
-////            dateLamp = day.toString()+"/"+month+"/"+year
-//////            Toast.makeText(this@MainActivity, msg, Toast.LENGTH_SHORT).show()
-////        }
-//
-//        val simpleTimePicker = findViewById<View>(R.id.timePicker) as TimePicker
-//        simpleTimePicker.setIs24HourView(true) // used to display AM/PM mode
-//
-//        simpleTimePicker.setOnTimeChangedListener(OnTimeChangedListener { view, hour, minute     ->
-////            Toast.makeText(applicationContext, "$hourOfDay  $minute", Toast.LENGTH_SHORT).show()
-//            timeLamp = hour.toString() +":"+ minute
-//        })
-//        timeLamp = hour
-//
 //        tvSaveSchedule.setOnClickListener {
 //            mDatabaseReference!!.child("new/ruangan").child(idRuanganSchedule!!)
-//                .child("schedule").child(barang!!.key!!).child("state").setValue(stateLamp)
-//            mDatabaseReference!!.child("new/ruangan").child(idRuanganSchedule!!)
-//                .child("schedule").child(barang!!.key!!).child("day").setValue(day)
-//            mDatabaseReference!!.child("new/ruangan").child(idRuanganSchedule!!)
-//                .child("schedule").child(barang!!.key!!).child("month").setValue(month)
-//            mDatabaseReference!!.child("new/ruangan").child(idRuanganSchedule!!)
-//                .child("schedule").child(barang!!.key!!).child("year").setValue(year)
-//            mDatabaseReference!!.child("new/ruangan").child(idRuanganSchedule!!)
-//                .child("schedule").child(barang!!.key!!).child("hour").setValue(hour)
-//            mDatabaseReference!!.child("new/ruangan").child(idRuanganSchedule!!)
-//                .child("schedule").child(barang!!.key!!).child("minute").setValue(minute)
-//            mDatabaseReference!!.child("new/ruangan").child(idRuanganSchedule!!)
-//                .child("schedule").child(barang!!.key!!).child("time").setValue(timeLamp)
+//                .child("schedule").child(barang!!.key!!).child("state").setValue()
 //        }
 
     }
